@@ -165,7 +165,9 @@ namespace ReactDemo.Controllers
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append("Winner,");
-			sb.Append("Scripts,");
+			sb.Append("Script One,");
+			sb.Append("Script Two,");
+			sb.Append("Date,");
 			sb.Append("TimeJudged,");
 			sb.Append("ElapsedTime,");
 			sb.Append("Judge");
