@@ -10,57 +10,15 @@ namespace ReactDemo.Controllers
 {
 	public class HomeController : Controller
 	{
-		private static readonly IList<CommentModel> _comments;
 		private static List<Pairing> allPairings = new List<Pairing>();
 		private static List<Judge> judges = new List<Judge>();
 		private static List<int> ids = new List<int>();
-
-		static HomeController()
-		{
-			_comments = new List<CommentModel>
-			{
-				new CommentModel
-				{
-					Id = 1,
-					Author = "Daniel Lo Nigro",
-					Text = "Hello ReactJS.NET World!"
-				},
-				new CommentModel
-				{
-					Id = 2,
-					Author = "Pete Hunt",
-					Text = "This is one comment"
-				},
-				new CommentModel
-				{
-					Id = 3,
-					Author = "Jordan Walke",
-					Text = "This is *another* comment"
-				},
-			};
-		}
-
+		
 		[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
 		public ActionResult Index()
 		{
 			generateID();
-			return View(_comments);
-		}
-
-		[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-		public ActionResult Comments()
-		{
-			return Json(_comments);
-		}
-
-		[Route("comments/new")]
-		[HttpPost]
-		public ActionResult AddComment(CommentModel comment)
-		{
-			// Create a fake ID for this comment
-			comment.Id = _comments.Count + 1;
-			_comments.Add(comment);
-			return Content("Success :)");
+			return View();
 		}
 
 		/// <summary>
@@ -75,8 +33,8 @@ namespace ReactDemo.Controllers
 			{
 				List<string> pdfNames = new List<string>();
 				string currentFile;
-				string[] dirs = Directory.GetFiles("C:\\Users\\owner\\source\\repos\\Femi1992\\React.NET\\tutorial-code\\wwwroot\\pdfjs-2.0.943-dist\\web", "*.pdf");
-				string[] imgs = Directory.GetFiles("C:\\Users\\owner\\source\\repos\\Femi1992\\React.NET\\tutorial-code\\wwwroot\\images", "*.jpg");
+				string[] dirs = Directory.GetFiles("wwwroot\\pdfjs-2.0.943-dist\\web", "*.pdf");
+				string[] imgs = Directory.GetFiles("wwwroot\\images", "*.jpg");
 				foreach (string dir in dirs)
 				{
 					currentFile = Path.GetFileName(dir).ToLower();
@@ -85,7 +43,7 @@ namespace ReactDemo.Controllers
 
 				foreach (string dir in imgs)
 				{
-					String relativeTo = "C:\\Users\\owner\\source\\repos\\Femi1992\\React.NET\\tutorial-code\\wwwroot";
+					String relativeTo = "wwwroot";
 					String relPath = Path.GetRelativePath(relativeTo, dir);
 					string ImagePath = "/" + relPath.Replace("\\", "/");
 					pdfNames.Add(ImagePath);
@@ -109,7 +67,8 @@ namespace ReactDemo.Controllers
 
 		//This method is called in the index() which gets called when the page is loaded.
 		//need to change the foor loop, 10 is just for testing.
-		public static int generateID()
+		[Route("id")]
+		public int generateID()
 		{
 			//not yet working smoothly, needs more testing and work.
 			Random rnd = new Random();
@@ -169,7 +128,7 @@ namespace ReactDemo.Controllers
 			Tuple<string, string> pairOfScripts = data.pairOfScripts;
 			string timeJudgement = data.timeJudgement;
 			string elapsedTime = data.elapsedTime;
-			int judgeID = generateID();
+			int judgeID = data.JudgeID;
 
 			Pairing p = new Pairing(Winner, pairOfScripts, timeJudgement, elapsedTime, judgeID);
 			allPairings.Add(p);
@@ -207,7 +166,9 @@ namespace ReactDemo.Controllers
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append("Winner,");
-			sb.Append("Scripts,");
+			sb.Append("Script One,");
+			sb.Append("Script Two,");
+			sb.Append("Date,");
 			sb.Append("TimeJudged,");
 			sb.Append("ElapsedTime,");
 			sb.Append("Judge");
