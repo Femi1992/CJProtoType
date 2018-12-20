@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>ReactJS and Babel tools for ASP.NET Core, including ASP.NET Core MVC. Please refer to project site (http://reactjs.net/) for full installation instructions, usage examples and sample code</Description>
+    <Copyright>Copyright 2014-Present Facebook, Inc</Copyright>
+    <AssemblyTitle>ReactJS.NET (ASP.NET Core MVC)</AssemblyTitle>
+    <Authors>Daniel Lo Nigro</Authors>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>React.AspNet</AssemblyName>
+    <AssemblyOriginatorKeyFile>../key.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PackageId>React.AspNet</PackageId>
+    <PackageTags>asp.net;mvc;asp;javascript;js;react;facebook;reactjs;vnext;asp.net 5;asp.net core</PackageTags>
+    <PackageIconUrl>http://reactjs.net/img/logo_64.png</PackageIconUrl>
+    <PackageProjectUrl>http://reactjs.net/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/reactjs/React.NET#licence</PackageLicenseUrl>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<DefineConstants>$(DefineConstants);ASPNETCORE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs" />
+    <Compile Include="..\SharedAssemblyVersionInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\React.AspNet.Middleware\React.AspNet.Middleware.csproj" />
+    <ProjectReference Include="..\React.Core\React.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <NoWarn>7035</NoWarn>
+  </PropertyGroup>
+
+</Project>

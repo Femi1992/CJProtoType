@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>{{ page.title }} | {{ site.name }}</title>
+  <meta name="viewport" content="width=device-width" />
+  <meta property="og:title" content="{{ page.title }} | {{ site.name }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}" />
+  <meta property="og:image" content="https://reactjs.org/logo-og.png" />
+  <meta property="og:description" content=".NET integration for ReactJS" />
+  <meta property="fb:app_id" content="1417169611875552" />
+
+  <link rel="shortcut icon" href="/favicon/favicon.ico" />
+  <link rel="alternate" type="application/rss+xml" title="{{ site.name }}" href="{{ site.url }}/feed.xml" />
+
+  {% stylesheet main %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css" />
+
+  <script type="text/javascript" src="//use.typekit.net/vqa1hcx.js"></script>
+  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-25623237-6', 'reactjs.net');
+    ga('send', 'pageview');
+  </script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="/">
+          <img class="nav-logo" src="/img/logo.svg" width="48" height="36">
+          {{ site.name }}
+        </a>
+        <input id="algolia-doc-search" type="text" placeholder="Search docs..." />
+        <ul class="nav-site">
+          <li><a href="/docs"{% if page.sectionid == 'docs' and page.id != 'tutorial' and page.id != 'download' %} class="active"{% endif %}>Docs</a></li>
+          <li><a href="/getting-started/tutorial.html"{% if page.id == 'tutorial' %} class="active"{% endif %}>Tutorial</a></li>
+          <li><a href="/getting-started/download.html"{% if page.id == 'download' %} class="active"{% endif %}>Download</a></li>
+          <li><a href="/blog/"{% if page.sectionid == 'blog' %} class="active"{% endif %}>Blog</a></li>
+          <li><a href="http://github.com/reactjs/React.NET">GitHub</a>
+        </ul>
+      </div>
+    </div>
+
+    {{ content }}
+
+    <footer class="wrap">
+      <div class="right">
+        &copy; 2014-Present Facebook Inc.
+        <a href="https://github.com/reactjs/React.NET/blob/master/site/jekyll/{{ page.path }}" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Algolia search -->
+  <script src="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>
+  <script>
+  docsearch({
+    apiKey: 'e9888f8a8af8c16709c02402b15c7695',
+    indexName: 'reactjs_net',
+    inputSelector: '#algolia-doc-search',
+    debug: false // Set debug to true if you want to inspect the dropdown
+  });
+  </script>
+
+  <!-- Facebook SDK -->
+  <div id="fb-root"></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=1417169611875552";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
+
+  <!-- Website Custom Audience -->
+  <script>(function() {
+    var _fbq = window._fbq || (window._fbq = []);
+    if (!_fbq.loaded) {
+      var fbds = document.createElement('script');
+      fbds.async = true;
+      fbds.src = '//connect.facebook.net/en_US/fbds.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(fbds, s);
+      _fbq.loaded = true;
+    }
+    _fbq.push(['addPixelId', "395824213885429"]);
+  })();
+  window._fbq = window._fbq || [];
+  window._fbq.push(["track", "PixelInitialized", {}]);
+  </script>
+  <noscript><img height="1" width="1" border="0" alt="" style="display:none" src="https://www.facebook.com/tr?id=395824213885429&amp;ev=NoScript" /></noscript>
+</body>
+</html>

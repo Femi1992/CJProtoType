@@ -1,0 +1,93 @@
+#myBody {
+	background-color: lightblue;
+}
+
+/*Header div */
+#header {
+	height: 50px;
+	font-family: 'Sofia';
+	font-size: 20px;
+}
+
+/*
+	This stops the element from moving when toggled between
+	display and hide.
+*/
+#headerText {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+/* Time elements*/
+#time {
+	position: relative;
+	text-align: center;
+	font-family: 'Alfa Slab One';
+	top: 1.5em;
+	font-size: 22px;
+}
+
+#timer {
+	position: relative;
+	text-align: center;
+	top: 30em;
+	font-family: 'Alfa Slab One';
+	font-size: 22px;
+}
+
+/* PDF and images display divs*/
+.itemDisplay {
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	align-content: space-between;
+}
+
+#left {
+	margin-left: 2em;
+}
+
+#right {
+	margin-right: 2em;
+}
+
+#nextFile {
+	align-self: center;
+}
+
+#prevFile {
+	align-self: center;
+}
+
+#totalScripts {
+	
+}
+
+/* Judge pairings buttons*/
+.judgeChoice {
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	align-content: space-between;
+}
+#itemOne {
+	margin-right: 10em;
+}
+
+#itemTwo {
+	margin-left: 10em;
+}
+
+/*Hide content*/
+#hideTitle {
+	position: relative;
+	top: 510px;
+	right: 10px;
+}
+
+#hideTime {
+	position: relative;
+	top: 550px;
+	right: 10px;
+}
+

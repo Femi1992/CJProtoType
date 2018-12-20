@@ -1,0 +1,31 @@
+@{
+	Layout = null;
+}
+<html>
+<head>
+	<title>Hello React</title>
+	<link rel="stylesheet" href="~/css/test.css" />
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
+	<link href='https://fonts.googleapis.com/css?family=Alfa%20Slab%20One' rel='stylesheet'>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body id="myBody">
+	<div id="pdfLoc"></div>
+	<div id="root"></div>
+	<div id="timer"></div>
+	<div id="sendReport">
+		<button type="button" onclick="location.href='@Url.Action("ReportBuilder")'">Send</button>
+	</div>
+	<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/16.4.0/umd/react.development.js"></script>
+	<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.4.0/umd/react-dom.development.js"></script>
+	<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.0/prop-types.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js"></script>
+	<script src="@Url.Content("~/js/details.jsx")"></script>
+	<script src="@Url.Content("~/js/clock.jsx")"></script>
+	@Html.ReactInitJavaScript()
+</body>
+</html>

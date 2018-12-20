@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2014-Present, Facebook, Inc.
+All rights reserved.
+
+This source code is licensed under the BSD-style license found in the
+LICENSE file in the root directory of this source tree. An additional grant
+of patent rights can be found in the PATENTS file in the same directory.
+-->
+<Project ToolsVersion="4.0" DefaultTargets="Build;Test;Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<Major>4</Major>
+		<Minor>0</Minor>
+		<Build>0-beta5</Build>
+		<Revision>0</Revision>
+		<DevNuGetServer>http://reactjs.net/packages/</DevNuGetServer>
+		<MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\tools\MSBuildTasks</MSBuildCommunityTasksPath>
+		<PackageOutputDir>$(MSBuildProjectDirectory)\output</PackageOutputDir>
+		<BuildType Condition="'$(BuildType)' == ''">Dev</BuildType>
+
+		<SolutionFile>src\React.sln</SolutionFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageAssemblies Include="Cassette.React" />
+		<PackageAssemblies Include="React.AspNet" />
+		<PackageAssemblies Include="React.AspNet.Middleware" />
+		<PackageAssemblies Include="React.Core" />
+		<PackageAssemblies Include="React.MSBuild" />
+		<PackageAssemblies Include="React.Owin" />
+		<PackageAssemblies Include="React.Router" />
+		<PackageAssemblies Include="React.Router.Mvc4" />
+		<PackageAssemblies Include="React.Web" />
+		<PackageAssemblies Include="React.Web.Mvc4" />
+		<PackageAssemblies Include="System.Web.Optimization.React" />
+	</ItemGroup>
+
+	<Import Project="$(MSBuildProjectDirectory)\tools\MSBuildTasks\MSBuild.Community.Tasks.Targets" />
+
+	<Target Name="RestorePackages" DependsOnTargets="Clean;UpdateVersion">
+		<!-- NuGet packages for "legacy" projects (eg. React.Samples.Mvc4) -->
+		<Exec
+			WorkingDirectory="$(MSBuildProjectDirectory)"
+			Command="tools\NuGet\nuget.exe restore $(SolutionFile)"
+		/>
+		<!-- NuGet packages for modern .csproj projects -->
+		<Exec
+			WorkingDirectory="$(MSBuildProjectDirectory)"
+			Command="dotnet restore $(SolutionFile) /p:Version=$(VersionString)"
+		/>
+		<!-- npm packages -->
+		<Exec
+			WorkingDirectory="src/React.Core"
+			Command="npm install"
+		/>
+		<Exec
+			WorkingDirectory="src/React.Sample.Webpack.CoreMvc"
+			Command="npm install"
+		/>
+	</Target>
+
+	<Target Name="UpdateVersion">
+		<GitVersion LocalPath="$(MSBuildProjectDirectory)">
+			<Output TaskParameter="CommitHash" PropertyName="Revision" />
+		</GitVersion>
+		<Time Format="yyyyMMdd-HHmm">
+			<Output TaskParameter="FormattedTime" PropertyName="Date" />
+		</Time>
+		<!-- Prepend date to build version if a dev build-->
+		<PropertyGroup Condition="$(BuildType) == 'Release'">
+			<VersionString>$(Major).$(Minor).$(Build)</VersionString>
+		</PropertyGroup>
+		<PropertyGroup Condition="$(BuildType) != 'Release'">
+			<VersionString>$(Major).$(Minor).$(Build)-dev-$(Date)</VersionString>
+		</PropertyGroup>
+		<!-- Set version for assemblies -->
+		<AssemblyInfo
+			CodeLanguage="CS"
+			OutputFile="src\SharedAssemblyVersionInfo.cs"
+			AssemblyVersion="$(Major).$(Minor)"
+			AssemblyFileVersion="$(VersionString).$(Revision)"
+			AssemblyInformationalVersion="$(VersionString)"
+		/>
+	</Target>
+
+	<Target Name="Clean" BeforeTargets="Build">
+		<!--
+			ASP.NET Core projects don't delete generated .nupkg files when cleaned or rebuilt, so we need to
+			do it here. See https://github.com/aspnet/XRE/issues/1301
+		-->
+		<DeleteTree Directories="src/artifacts" />
+		<DeleteTree Directories="src/%(PackageAssemblies.Identity)/bin" />
+	</Target>
+
+	<Target Name="Build" DependsOnTargets="RestorePackages;UpdateVersion">
+		<Exec WorkingDirectory="src/React.Core" Command="node_modules/.bin/gulp" />
+		<MSBuild Projects="$(SolutionFile)" Targets="Rebuild" Properties="Configuration=Release;Platform=Any CPU;NoWarn=1607,7035,1701;Version=$(VersionString)" />
+		<Exec WorkingDirectory="src/React.Sample.Webpack.CoreMvc" Command="node_modules/.bin/webpack" />
+	</Target>
+
+	<Target Name="Test" DependsOnTargets="Build">
+		<Exec
+			WorkingDirectory="$(MSBuildProjectDirectory)"
+			Command="dotnet test --configuration Release --no-build tests/React.Tests/React.Tests.csproj"
+		/>
+		<Exec
+			WorkingDirectory="$(MSBuildProjectDirectory)"
+			Command="dotnet test --configuration Release --no-build tests/React.Tests.Integration/React.Tests.Integration.csproj"
+		/>
+	</Target>
+
+	<Target Name="Package" DependsOnTargets="Build">
+		<!-- Delete old packages -->
+		<RemoveDir Directories="$(PackageOutputDir)" />
+
+		<!-- Create new packages -->
+		<MakeDir Directories="$(PackageOutputDir)" />
+		<Exec
+			WorkingDirectory="$(MSBuildProjectDirectory)"
+			Command="dotnet pack --output $(PackageOutputDir) --configuration Release  --no-build src/%(PackageAssemblies.Identity) /p:Version=$(VersionString)"
+		/>
+	</Target>
+
+	<Target Name="Push">
+		<CallTarget Targets="PushDev" Condition="$(BuildType) != 'Release'" />
+		<CallTarget Targets="PushRelease" Condition="$(BuildType) == 'Release'" />
+	</Target>
+	<Target Name="PushRelease">
+		<ItemGroup>
+			<PackageFiles Include="$(PackageOutputDir)\*.nupkg" Exclude="$(PackageOutputDir)\*.symbols.nupkg" />
+		</ItemGroup>
+		<Exec
+			WorkingDirectory="$(MSBuildProjectDirectory)"
+			Command="tools\NuGet\nuget.exe push %(PackageFiles.Identity) -NonInteractive -Source https://www.nuget.org/api/v2/package"
+		/>
+	</Target>
+	<Target Name="PushDev">
+		<Exec
+			WorkingDirectory="$(MSBuildProjectDirectory)"
+			Command="tools\NuGet\nuget.exe push $(PackageOutputDir)\*.symbols.nupkg -Source $(DevNuGetServer) -NonInteractive"
+		/>
+	</Target>
+</Project>

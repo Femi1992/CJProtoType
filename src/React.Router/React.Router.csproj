@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>React Router support for ReactJS.NET.</Description>
+		<Copyright>Copyright 2014-Present Facebook, Inc</Copyright>
+		<AssemblyTitle>ReactJS.NET Router</AssemblyTitle>
+		<Authors>Daniel Lo Nigro, Gunnar Már Óttarsson</Authors>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<AssemblyName>React.Router</AssemblyName>
+		<AssemblyOriginatorKeyFile>../key.snk</AssemblyOriginatorKeyFile>
+		<SignAssembly>true</SignAssembly>
+		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+		<PackageId>React.Router</PackageId>
+		<PackageTags>asp.net;mvc;asp;javascript;js;react;facebook;reactjs;babel;router;react router</PackageTags>
+		<PackageIconUrl>http://reactjs.net/img/logo_64.png</PackageIconUrl>
+		<PackageProjectUrl>http://reactjs.net/</PackageProjectUrl>
+		<PackageLicenseUrl>https://github.com/reactjs/React.NET#licence</PackageLicenseUrl>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\SharedAssemblyInfo.cs" />
+		<Compile Include="..\SharedAssemblyVersionInfo.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\React.AspNet\React.AspNet.csproj" />
+		<ProjectReference Include="..\React.Core\React.Core.csproj" />
+	</ItemGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+</Project>
