@@ -1,7 +1,7 @@
 class CJCore extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { data: [], index: 0, isHidden: false, counter: 0 }; 
+		this.state = { data: [], index: 0, isHidden: false, counter: 0, score : 0}; 
 		this.nextFileButton = this.nextFileButton.bind(this);
 		this.prevFileButton = this.prevFileButton.bind(this);
 		this.judgePairOneButton = this.judgePairOneButton.bind(this);
@@ -26,7 +26,6 @@ class CJCore extends React.Component {
 		}
 
 	getNextFiles() {
-		var len = this.state.data.length;
 		var newindex = this.state.index + 1;
 		var newcounter = this.state.counter;
 		this.state.index == this.state.counter ? newcounter++ : newcounter;
@@ -34,22 +33,17 @@ class CJCore extends React.Component {
 		this.setState({ index: newindex, counter: newcounter, score: Score });
 	}
 
-	//This moves onto the next two paired files
 	nextFileButton() {
-		//the below method call updates the judges score, this needs to be fixed.
+		var currentScore = this.state.score;
 		this.getNextFiles();
 		var counter = this.state.counter;
-		var index = this.state.index;
-		//is this statement in the correct place? How do we update state after this condition?
-		//
+		var index = this.state.index; 
 		index < counter ? index++ : index;
-		this.setState({ index: index, counter: counter })
+		this.setState({ index: index, counter: counter, score: currentScore })
 	}
 
 	prevFileButton() {
-		var len = this.state.data.length;
 		var newindex = this.state.index - 1;
-		
 		if (newindex <= 0) {
 			newindex = 0;
 		}
@@ -90,7 +84,7 @@ class CJCore extends React.Component {
 	}
 
 	judgeScore(score) {
-		score = this.state.counter;
+		score = this.state.score;
 		score +=2;
 		return score;
 	}
