@@ -67,7 +67,8 @@ namespace ReactDemo.Controllers
 
 		//This method is called in the index() which gets called when the page is loaded.
 		//need to change the foor loop, 10 is just for testing.
-		public static int generateID()
+		[Route("id")]
+		public int generateID()
 		{
 			//not yet working smoothly, needs more testing and work.
 			Random rnd = new Random();
@@ -127,7 +128,7 @@ namespace ReactDemo.Controllers
 			Tuple<string, string> pairOfScripts = data.pairOfScripts;
 			string timeJudgement = data.timeJudgement;
 			string elapsedTime = data.elapsedTime;
-			int judgeID = generateID();
+			int judgeID = data.JudgeID;
 
 			Pairing p = new Pairing(Winner, pairOfScripts, timeJudgement, elapsedTime, judgeID);
 			allPairings.Add(p);

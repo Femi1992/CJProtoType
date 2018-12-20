@@ -1,7 +1,7 @@
 class CJCore extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { data: [], index: 0, isHidden: false, counter: 0, score : 0, time: new Date() }; 
+		this.state = { data: [], index: 0, isHidden: false, counter: 0, score : 0, time: new Date() , judgeID: 0}; 
 		this.nextFileButton = this.nextFileButton.bind(this);
 		this.prevFileButton = this.prevFileButton.bind(this);
 		this.judgePairOneButton = this.judgePairOneButton.bind(this);
@@ -9,6 +9,7 @@ class CJCore extends React.Component {
 		this.send = this.send.bind(this);
 		this.judgeScore = this.judgeScore.bind(this);
 		this.getNextFiles = this.getNextFiles.bind(this);
+		this.getJudgeID = this.getJudgeID.bind(this);
 	}
 
 	componentDidMount() {
@@ -19,6 +20,9 @@ class CJCore extends React.Component {
 			this.setState({ data: data });
 		};
 		xhr.send();
+		//This is placed here for the momennt so that the judge ID is not generated more than once, still needs more work.
+		//Need to also explore what happens in the case of multiple instances of this running.
+		this.getJudgeID();
 	}
 
 	toggleHidden() {
@@ -89,6 +93,18 @@ class CJCore extends React.Component {
 		return score;
 	}
 
+	getJudgeID() {
+		const xhr = new XMLHttpRequest();
+		xhr.open('get', "/id", true);
+		xhr.onload = () => {
+			const id = JSON.parse(xhr.responseText);
+			this.setState({ judgeID: id });
+		};
+		xhr.send();
+		var id = this.state.judgeID;
+		return id;
+	}
+
 	send(pair, winner, timeJ, elapsed) {
 		fetch("winners", {
 			method: 'POST',
@@ -96,7 +112,7 @@ class CJCore extends React.Component {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ winner: winner, pairOfScripts: pair, timeJudgement: timeJ, elapsedTime: elapsed }),
+			body: JSON.stringify({ winner: winner, pairOfScripts: pair, timeJudgement: timeJ, elapsedTime: elapsed, judgeID: this.state.judgeID }),
 		}).then(function (response) {
 			if (response.status !== 200) {
 				console.log('fetch returned not ok' + response.status);
@@ -165,6 +181,7 @@ class CJCore extends React.Component {
 	}
 }
 
+
 function Header(props) {
 	return (
 		<div id="header" >
@@ -214,12 +231,7 @@ function getFileType(filename) {
 	return x;
 }
 
-
-
-
-
-
 ReactDOM.render(
-	<CJCore url="/files" />,
+	<CJCore url="/files"/>,
 	document.getElementById('pdfLoc')
 );
