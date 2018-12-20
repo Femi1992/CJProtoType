@@ -46,13 +46,12 @@ class CJCore extends React.Component {
 		this.setState({ index: index, counter: counter })
 	}
 
-	//this method needs work if you are at the beginning of the list of pairings
 	prevFileButton() {
 		var len = this.state.data.length;
 		var newindex = this.state.index - 1;
 		
-		if (newindex <= len-len) {
-			newindex = len;
+		if (newindex <= 0) {
+			newindex = 0;
 		}
 		this.setState({ index: newindex});
 	}

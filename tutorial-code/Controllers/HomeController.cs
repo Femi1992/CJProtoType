@@ -150,8 +150,6 @@ namespace ReactDemo.Controllers
 			List<Tuple<string, string>> finalResult = new List<Tuple<string, string>>();
 			foreach (Tuple<int, int> x in result)
 			{
-				//this gives back a list of the paired files but going through each tuple in result
-				//and then using the tuples as index numbers against the original list
 				finalResult.Add(new Tuple<string, string>(original[x.Item1], original[x.Item2]));
 			}
 			return finalResult;
@@ -208,8 +206,6 @@ namespace ReactDemo.Controllers
 		public string GenerateCSVString()
 		{
 			StringBuilder sb = new StringBuilder();
-			var filepath = @"report.csv";
-
 			sb.Append("Winner,");
 			sb.Append("Scripts,");
 			sb.Append("TimeJudged,");
