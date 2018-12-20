@@ -1,7 +1,7 @@
 class CJCore extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { data: [], index: 0, isHidden: false, counter: 0, score : 0}; 
+		this.state = { data: [], index: 0, isHidden: false, counter: 0, score : 0, time: new Date() }; 
 		this.nextFileButton = this.nextFileButton.bind(this);
 		this.prevFileButton = this.prevFileButton.bind(this);
 		this.judgePairOneButton = this.judgePairOneButton.bind(this);
@@ -30,7 +30,7 @@ class CJCore extends React.Component {
 		var newcounter = this.state.counter;
 		this.state.index == this.state.counter ? newcounter++ : newcounter;
 		var Score = this.judgeScore();
-		this.setState({ index: newindex, counter: newcounter, score: Score });
+		this.setState({ index: newindex, counter: newcounter, score: Score, time: new Date() });
 	}
 
 	nextFileButton() {
