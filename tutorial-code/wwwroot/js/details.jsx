@@ -6,6 +6,7 @@ class CJCore extends React.Component {
 		this.prevFileButton = this.prevFileButton.bind(this);
 		this.judgePairOneButton = this.judgePairOneButton.bind(this);
 		this.judgePairTwoButton = this.judgePairTwoButton.bind(this);
+		this.judgePair = this.judgePair.bind(this);
 		this.send = this.send.bind(this);
 		this.judgeScore = this.judgeScore.bind(this);
 		this.getNextFiles = this.getNextFiles.bind(this);
@@ -26,24 +27,28 @@ class CJCore extends React.Component {
 	}
 
 	toggleHidden() {
-		this.setState({ isHidden: !this.state.isHidden})
+		this.setState({ isHidden: !this.state.isHidden });
 		}
 
 	getNextFiles() {
 		var newindex = this.state.index + 1;
 		var newcounter = this.state.counter;
-		this.state.index == this.state.counter ? newcounter++ : newcounter;
+		this.state.index === this.state.counter ? newcounter++ : newcounter;
 		var Score = this.judgeScore();
 		this.setState({ index: newindex, counter: newcounter, score: Score, time: new Date() });
 	}
 
 	nextFileButton() {
-		var currentScore = this.state.score;
-		this.getNextFiles();
-		var counter = this.state.counter;
-		var index = this.state.index; 
-		index < counter ? index++ : index;
-		this.setState({ index: index, counter: counter, score: currentScore })
+		//var currentScore = this.state.score;
+		//this.getNextFiles();
+		//var counter = this.state.counter;
+		//var index = this.state.index; 
+		//index < counter ? index++ : index;
+		//this.setState({ index: index, counter: counter, score: currentScore });
+		if (this.state.index < this.state.counter) {
+			getNextFiles();
+		}
+		
 	}
 
 	prevFileButton() {
@@ -55,15 +60,16 @@ class CJCore extends React.Component {
 	}
 
 	judgePairOneButton() {
-		var item = this.state.data[this.state.index]["item1"];
-		var timeJudged = this.setTime();
-		var elapsed = this.elapsedTime();
-		this.getNextFiles();
-		this.send(this.state.data[this.state.index], item, timeJudged, elapsed);
+		this.judgePair("item1");
 	}
 
 	judgePairTwoButton() {
-		var item = this.state.data[this.state.index]["item2"];
+		this.judgePair("item2");
+	}
+
+	//This handles pressing either the item 1 or 2 button 
+	judgePair(itemNumber) {
+		var item = this.state.data[this.state.index][itemNumber];
 		var timeJudged = this.setTime();
 		var elapsed = this.elapsedTime();
 		this.getNextFiles();
@@ -83,7 +89,7 @@ class CJCore extends React.Component {
 		timeDiff /= 1000;
 
 		var seconds = Math.round(timeDiff);
-		var elapsed = seconds + " seconds"
+		var elapsed = seconds + " seconds";
 		return elapsed;
 	}
 
@@ -112,7 +118,7 @@ class CJCore extends React.Component {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ winner: winner, pairOfScripts: pair, timeJudgement: timeJ, elapsedTime: elapsed, judgeID: this.state.judgeID }),
+			body: JSON.stringify({ winner: winner, pairOfScripts: pair, timeJudgement: timeJ, elapsedTime: elapsed, judgeID: this.state.judgeID })
 		}).then(function (response) {
 			if (response.status !== 200) {
 				console.log('fetch returned not ok' + response.status);
@@ -129,32 +135,29 @@ class CJCore extends React.Component {
 	}
 
 	render() {
-		let view;
-		let viewTwo;
+		let viewLeft;
+		let viewRight;
 		var endOfPairs = this.state.counter;
 		
 		if (this.state.data.length > 0) {
 			if (endOfPairs >= this.state.data.length) {
-				view = <EndOfPairs align="left" />
+				viewLeft = <EndOfPairs align="left" />;
 			} else {
-				var currentFile = this.state.data[this.state.index]["item1"];
-				var currentFileNext = this.state.data[this.state.index]["item2"]
-				var x = getFileType(currentFile);
-				var y = getFileType(currentFileNext);
-
-				if (y === true) {
-
-					viewTwo = <PDFViewer id="right" data={currentFileNext} />
-				} else {
-
-					viewTwo = <IMGViewer id="right" data={currentFileNext}  />
-				}
-
+				var currentFileLeft = this.state.data[this.state.index]["item1"];
+				var currentFileRight = this.state.data[this.state.index]["item2"];
+				var x = getFileType(currentFileLeft);
+				var y = getFileType(currentFileRight);
 				if (x === true) {
-					view = <PDFViewer id="left" data={currentFile} />
+					viewLeft = <PDFViewer id="left" data={currentFileLeft} />;
 
 				} else {
-					view = <IMGViewer id="left" data={currentFile}  />
+					viewLeft = <IMGViewer id="left" data={currentFileLeft} />;
+				}
+				if (y === true) {
+					viewRight = <PDFViewer id="right" data={currentFileRight} />;
+				} else {
+
+					viewRight = <IMGViewer id="right" data={currentFileRight} />;
 				}
 			}
 		}
@@ -163,8 +166,8 @@ class CJCore extends React.Component {
 				{<Header isHidden={this.state.isHidden} />}
 				<div class="itemDisplay">
 					<button id="prevFileButton" class="btn btn-dark" align="right" onClick={this.prevFileButton}>Previous File</button>
-					{view}
-					{viewTwo}
+					{viewLeft}
+					{viewRight}
 					<button id="nextFileButton" class="btn btn-dark" align="left" onClick={this.nextFileButton}>Next File</button>
 				</div>
 

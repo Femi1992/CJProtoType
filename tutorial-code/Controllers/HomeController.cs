@@ -13,11 +13,12 @@ namespace ReactDemo.Controllers
 		private static List<Pairing> allPairings = new List<Pairing>();
 		private static List<Judge> judges = new List<Judge>();
 		private static List<int> ids = new List<int>();
+		private static int maxJudges = 5;
 		
 		[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
 		public ActionResult Index()
 		{
-			generateID();
+			//generateID();
 			return View();
 		}
 
@@ -75,9 +76,10 @@ namespace ReactDemo.Controllers
 			int id;
 			do
 			{
-				id = rnd.Next(1, 5);
+				id = rnd.Next(1, maxJudges);
 			}
 			while (ids.Contains(id));
+			maxJudges++; //Max judges is a low number to keep generated IDs low, it scales up if we want more browser windows to test.
 			ids.Add(id);
 			Judge j = new Judge(id);
 			judges.Add(j);
@@ -104,7 +106,7 @@ namespace ReactDemo.Controllers
 		public List<Tuple<string, string>> createPairings()
 		{
 			//taken from line 90 above in get file method
-			List<Tuple<int, int>> result = getPairings(getFiles().Count - 1, 5); //change seoond number back to 30 once done testing counter
+			List<Tuple<int, int>> result = getPairings(getFiles().Count - 1, 20); //change seoond number back to 30 once done testing counter
 			List<string> original = getFiles();
 			List<Tuple<string, string>> finalResult = new List<Tuple<string, string>>();
 			foreach (Tuple<int, int> x in result)
@@ -124,32 +126,32 @@ namespace ReactDemo.Controllers
 		[Route("winners")]
 		public string getWinners([FromBody] Pairing data)
 		{
-			string Winner = data.Winner;
+			string winner = data.winner;
 			Tuple<string, string> pairOfScripts = data.pairOfScripts;
 			string timeJudgement = data.timeJudgement;
 			string elapsedTime = data.elapsedTime;
-			int judgeID = data.JudgeID;
+			int judgeID = data.judgeID;
 
-			Pairing p = new Pairing(Winner, pairOfScripts, timeJudgement, elapsedTime, judgeID);
+			Pairing p = new Pairing(winner, pairOfScripts, timeJudgement, elapsedTime, judgeID);
 			allPairings.Add(p);
-			return Winner;
+			return winner;
 		}
 
 		public class Pairing
 		{
-			public string Winner { get; set; }
+			public string winner { get; set; }
 			public Tuple<string, string> pairOfScripts { get; set; }
 			public string timeJudgement { get; set; }
 			public string elapsedTime { get; set; }
-			public int JudgeID;
+			public int judgeID;
 
-			public Pairing(string Winner, Tuple<string, string> pairOfScripts, string timeJudgement, string elapsedTime, int id)
+			public Pairing(string winner, Tuple<string, string> pairOfScripts, string timeJudgement, string elapsedTime, int id)
 			{
-				this.Winner = Winner;
+				this.winner = winner;
 				this.pairOfScripts = pairOfScripts;
 				this.timeJudgement = timeJudgement;
 				this.elapsedTime = elapsedTime;
-				this.JudgeID = id;
+				this.judgeID = id;
 			}
 		}
 
@@ -175,11 +177,12 @@ namespace ReactDemo.Controllers
 			sb.AppendLine();
 			for (int i = 0; i < allPairings.Count; i++)
 			{
-				sb.Append(allPairings[i].Winner + ",");
-				sb.Append(allPairings[i].pairOfScripts.ToString() + ",");
+				//Just cleaning the strings up a little bit for easier reading/analysis
+				sb.Append(allPairings[i].winner.Replace("/images/","") + ",");
+				sb.Append(allPairings[i].pairOfScripts.ToString().Replace("/images/", "").Replace("(","").Replace(")", "") + ",");
 				sb.Append(allPairings[i].timeJudgement + ",");
 				sb.Append(allPairings[i].elapsedTime + ",");
-				sb.Append(allPairings[i].JudgeID + ",");
+				sb.Append(allPairings[i].judgeID + ",");
 				sb.AppendLine();
 			}
 			return sb.ToString();
