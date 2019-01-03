@@ -1,7 +1,7 @@
 class CJCore extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { data: [], index: 0, isHidden: false, counter: 0, score : 0, time: new Date() , judgeID: 0}; 
+		this.state = { data: [], index: 0, isHidden: false, counter: 0, score: 0, time: new Date(), judgeID: 0, winList: [], topPick: ""}; 
 		this.nextFileButton = this.nextFileButton.bind(this);
 		this.prevFileButton = this.prevFileButton.bind(this);
 		this.judgePairOneButton = this.judgePairOneButton.bind(this);
@@ -35,7 +35,8 @@ class CJCore extends React.Component {
 		var newcounter = this.state.counter;
 		this.state.index === this.state.counter ? newcounter++ : newcounter;
 		var Score = this.judgeScore();
-		this.setState({ index: newindex, counter: newcounter, score: Score, time: new Date() });
+		mostSelected = this.strMode(this.state.winList);
+		this.setState({ index: newindex, counter: newcounter, score: Score, time: new Date(), topPick: mostSelected });
 	}
 
 	nextFileButton() {
@@ -46,7 +47,7 @@ class CJCore extends React.Component {
 		//index < counter ? index++ : index;
 		//this.setState({ index: index, counter: counter, score: currentScore });
 		if (this.state.index < this.state.counter) {
-			getNextFiles();
+			this.getNextFiles();
 		}
 		
 	}
@@ -73,7 +74,27 @@ class CJCore extends React.Component {
 		var timeJudged = this.setTime();
 		var elapsed = this.elapsedTime();
 		this.getNextFiles();
+		this.state.winList.push(item);
 		this.send(this.state.data[this.state.index], item, timeJudged, elapsed);
+	}
+
+	//what happens if you have two numbers appearing the same amount of times?
+	strMode(array) {
+		let mf = 1;
+		let m = 0;
+		let item;
+		for (let i = 0; i < array.length; i++) {
+			for (let j = i; j < array.length; j++) {
+				if (array[i] == array[j])
+					m++;
+				if (mf < m) {
+					mf = m;
+					item = array[i];
+				}
+			}
+			m = 0;
+		}
+		return item;
 	}
 
 	setTime() {
@@ -178,7 +199,7 @@ class CJCore extends React.Component {
 				<button id="hideTitle" class="btn btn-dark" onClick={this.toggleHidden.bind(this)} >
 					Hide Title
 				</button>
-				<TotalScripts data={this.state.data.length} score={this.state.score} />
+				<TotalScripts data={this.state.data.length} score={this.state.score} top={this.state.topPick} />
 			</div>
 		);
 	}
@@ -197,7 +218,8 @@ function TotalScripts(props) {
 	return (
 		<div id="totalScripts">
 			<p>Total pairings: {props.data}</p>
-			<p>Scripts Judged {props.score}:</p>
+			<p>Scripts Judged: {props.score}</p>
+			<p>Leading Script: {props.top}:</p>
 		</div>
 	);
 }
