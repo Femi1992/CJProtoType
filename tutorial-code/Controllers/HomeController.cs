@@ -14,9 +14,6 @@ namespace ReactDemo.Controllers
 		private static List<Judge> judges = new List<Judge>();
 		private static List<int> ids = new List<int>();
 		private static List<string> scriptsChosen = new List<string>();
-		private static Dictionary<string, int> counts = new Dictionary<string, int>();
-		private int compare = 0;
-		private string mostFrequent = "";
 		private static int maxJudges = 5;
 		
 		[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
@@ -145,6 +142,10 @@ namespace ReactDemo.Controllers
 		[Route("leader")]
 		public string GetLeadingScript()
 		{
+			Dictionary<string, int> counts = new Dictionary<string, int>();
+			int compare = 0;
+	        string mostFrequent = "";
+
 			for (var i = 0; i < scriptsChosen.Count; i++)
 			{
 				// this needs changing, otherwise one gets added to each key during each iterations
