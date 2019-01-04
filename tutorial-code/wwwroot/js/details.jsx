@@ -80,21 +80,26 @@ class CJCore extends React.Component {
 
 	//what happens if you have two numbers appearing the same amount of times?
 	strMode(array) {
-		let mf = 1;
-		let m = 0;
-		let item;
-		for (let i = 0; i < array.length; i++) {
-			for (let j = i; j < array.length; j++) {
-				if (array[i] == array[j])
-					m++;
-				if (mf < m) {
-					mf = m;
-					item = array[i];
-				}
+		var counts = {};
+		var compare = 0;
+		var mostFrequent;
+
+		for (var i = 0; i < array.length; i++) {
+			var word = array[i];
+
+			if (counts[word] === undefined) { 
+				counts[word] = 1;    
+			} else {                 
+				counts[word] = counts[word] + 1; 
 			}
-			m = 0;
+			if (counts[word] > compare) {
+				compare = counts[word];
+				mostFrequent = array[i];
+			} else if (counts[word] == compare) {
+				mostFrequent = "tie";
+			}
 		}
-		return item;
+		return mostFrequent;
 	}
 
 	setTime() {
@@ -204,7 +209,6 @@ class CJCore extends React.Component {
 		);
 	}
 }
-
 
 function Header(props) {
 	return (
