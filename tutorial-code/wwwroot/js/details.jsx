@@ -11,6 +11,7 @@ class CJCore extends React.Component {
 		this.judgeScore = this.judgeScore.bind(this);
 		this.getNextFiles = this.getNextFiles.bind(this);
 		this.getJudgeID = this.getJudgeID.bind(this);
+		this.getLeadingScript = this.getLeadingScript.bind(this);
 	}
 
 	componentDidMount() {
@@ -36,16 +37,11 @@ class CJCore extends React.Component {
 		this.state.index === this.state.counter ? newcounter++ : newcounter;
 		var Score = this.judgeScore();
 		mostSelected = this.strMode(this.state.winList);
-		this.setState({ index: newindex, counter: newcounter, score: Score, time: new Date(), topPick: mostSelected });
+		top = this.getLeadingScript();
+		this.setState({ index: newindex, counter: newcounter, score: Score, time: new Date()});
 	}
 
 	nextFileButton() {
-		//var currentScore = this.state.score;
-		//this.getNextFiles();
-		//var counter = this.state.counter;
-		//var index = this.state.index; 
-		//index < counter ? index++ : index;
-		//this.setState({ index: index, counter: counter, score: currentScore });
 		if (this.state.index < this.state.counter) {
 			this.getNextFiles();
 		}
@@ -73,12 +69,11 @@ class CJCore extends React.Component {
 		var item = this.state.data[this.state.index][itemNumber];
 		var timeJudged = this.setTime();
 		var elapsed = this.elapsedTime();
+		//this.state.winList.push(item);
 		this.getNextFiles();
-		this.state.winList.push(item);
 		this.send(this.state.data[this.state.index], item, timeJudged, elapsed);
 	}
 
-	//what happens if you have two numbers appearing the same amount of times?
 	strMode(array) {
 		var counts = {};
 		var compare = 0;
@@ -135,6 +130,18 @@ class CJCore extends React.Component {
 		xhr.send();
 		var id = this.state.judgeID;
 		return id;
+	}
+
+	getLeadingScript() {
+		const xhr = new XMLHttpRequest();
+		xhr.open('get', "/leader", true);
+		xhr.onload = () => {
+			const script = JSON.parse(xhr.responseText);
+			this.setState({ topPick: script });
+		};
+		xhr.send();
+		var top = this.state.topPick;
+		return top;
 	}
 
 	send(pair, winner, timeJ, elapsed) {
