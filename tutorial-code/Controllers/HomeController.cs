@@ -19,7 +19,7 @@ namespace ReactDemo.Controllers
 		[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
 		public ActionResult Index()
 		{
-			//generateID();
+			//GenerateID();
 			return View();
 		}
 
@@ -29,7 +29,7 @@ namespace ReactDemo.Controllers
 		/// For the javascript to work smoothly this method must return a list of strings
 		/// </summary>
 		/// <returns></returns>
-		public List<string> getFiles()
+		public List<string> GetFiles()
 		{
 			try
 			{
@@ -64,13 +64,13 @@ namespace ReactDemo.Controllers
 		[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
 		public ActionResult names()
 		{
-			return Json(getFiles());
+			return Json(GetFiles());
 		}
 
 		//This method is called in the index() which gets called when the page is loaded.
 		//need to change the foor loop, 10 is just for testing.
 		[Route("id")]
-		public int generateID()
+		public int GenerateID()
 		{
 			//not yet working smoothly, needs more testing and work.
 			Random rnd = new Random();
@@ -87,8 +87,8 @@ namespace ReactDemo.Controllers
 			return id;
 		}
 
-		//public NumericMatrix getPairings(int noScripts, int noPairings)
-		public List<Tuple<int, int>> getPairings(int noScripts, int noPairings)
+		//public NumericMatrix GetPairings(int noScripts, int noPairings)
+		public List<Tuple<int, int>> GetPairings(int noScripts, int noPairings)
 		{
 			REngineClass.GetREngine().Evaluate(@"source('wwwroot/RScripts/ComparativeJudgmentPairingsTest.R')");
 			NumericMatrix matrix = REngineClass.GetREngine().Evaluate(string.Format("matrix <- generatePairings(noOfScripts = {0}, noOfPairings = {1})", noScripts, noPairings)).AsNumericMatrix();
@@ -104,11 +104,11 @@ namespace ReactDemo.Controllers
 			return pairings;
 		}
 
-		public List<Tuple<string, string>> createPairings()
+		public List<Tuple<string, string>> CreatePairings()
 		{
 			//taken from line 90 above in get file method
-			List<Tuple<int, int>> result = getPairings(getFiles().Count - 1, 20); //change seoond number back to 30 once done testing counter
-			List<string> original = getFiles();
+			List<Tuple<int, int>> result = GetPairings(GetFiles().Count - 1, 20); //change seoond number back to 30 once done testing counter
+			List<string> original = GetFiles();
 			List<Tuple<string, string>> finalResult = new List<Tuple<string, string>>();
 			foreach (Tuple<int, int> x in result)
 			{
@@ -118,14 +118,14 @@ namespace ReactDemo.Controllers
 		}
 
 		[Route("files")]
-		public ActionResult getPairedFiles()
+		public ActionResult GetPairedFiles()
 		{
-			return Json(createPairings());
+			return Json(CreatePairings());
 		}
 
 		[Produces("application/json")]
 		[Route("winners")]
-		public string getWinners([FromBody] Pairing data)
+		public string GetWinners([FromBody] Pairing data)
 		{
 			string winner = data.winner;
 			Tuple<string, string> pairOfScripts = data.pairOfScripts;

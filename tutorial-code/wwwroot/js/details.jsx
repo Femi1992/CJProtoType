@@ -24,7 +24,7 @@ class CJCore extends React.Component {
 		xhr.send();
 		//This is placed here for the momennt so that the judge ID is not generated more than once, still needs more work.
 		//Need to also explore what happens in the case of multiple instances of this running.
-		//this.getJudgeID();
+		this.getJudgeID();
 	}
 
 	toggleHidden() {
@@ -36,7 +36,6 @@ class CJCore extends React.Component {
 		var newcounter = this.state.counter;
 		this.state.index === this.state.counter ? newcounter++ : newcounter;
 		var Score = this.judgeScore();
-		//mostSelected = this.strMode(this.state.winList);
 	    this.getLeadingScript();
 		this.setState({ index: newindex, counter: newcounter, score: Score, time: new Date()});
 	}
@@ -68,32 +67,8 @@ class CJCore extends React.Component {
 		var item = this.state.data[this.state.index][itemNumber];
 		var timeJudged = this.setTime();
 		var elapsed = this.elapsedTime();
-		//this.state.winList.push(item);
 		this.getNextFiles();
 		this.send(this.state.data[this.state.index], item, timeJudged, elapsed);
-	}
-
-	strMode(array) {
-		var counts = {};
-		var compare = 0;
-		var mostFrequent;
-
-		for (var i = 0; i < array.length; i++) {
-			var word = array[i];
-
-			if (counts[word] === undefined) { 
-				counts[word] = 1;    
-			} else {                 
-				counts[word] = counts[word] + 1; 
-			}
-			if (counts[word] > compare) {
-				compare = counts[word];
-				mostFrequent = array[i];
-			} else if (counts[word] == compare) {
-				mostFrequent = "tie";
-			}
-		}
-		return mostFrequent;
 	}
 
 	setTime() {
@@ -135,7 +110,7 @@ class CJCore extends React.Component {
 		const xhr = new XMLHttpRequest();
 		xhr.open('get', "/leader", true);
 		xhr.onload = () => {
-			const script = xhr.responseText; //had to changed from previous get judgeID method to work, not sure why???
+			const script = xhr.responseText; 
 			this.setState({ topPick: script });
 		};
 		xhr.send();
