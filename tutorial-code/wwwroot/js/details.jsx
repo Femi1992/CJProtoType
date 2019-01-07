@@ -1,7 +1,7 @@
 class CJCore extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { data: [], index: 0, isHidden: false, counter: 0, score: 0, time: new Date(), judgeID: 0, winList: [], topPick: ""}; 
+		this.state = { data: [], index: 0, isHidden: false, counter: 0, score: 0, time: new Date(), judgeID: 0, winList: [], topPick: "" }; 
 		this.nextFileButton = this.nextFileButton.bind(this);
 		this.prevFileButton = this.prevFileButton.bind(this);
 		this.judgePairOneButton = this.judgePairOneButton.bind(this);
@@ -24,7 +24,7 @@ class CJCore extends React.Component {
 		xhr.send();
 		//This is placed here for the momennt so that the judge ID is not generated more than once, still needs more work.
 		//Need to also explore what happens in the case of multiple instances of this running.
-		this.getJudgeID();
+		//this.getJudgeID();
 	}
 
 	toggleHidden() {
@@ -36,8 +36,8 @@ class CJCore extends React.Component {
 		var newcounter = this.state.counter;
 		this.state.index === this.state.counter ? newcounter++ : newcounter;
 		var Score = this.judgeScore();
-		mostSelected = this.strMode(this.state.winList);
-		top = this.getLeadingScript();
+		//mostSelected = this.strMode(this.state.winList);
+	    this.getLeadingScript();
 		this.setState({ index: newindex, counter: newcounter, score: Score, time: new Date()});
 	}
 
@@ -45,7 +45,6 @@ class CJCore extends React.Component {
 		if (this.state.index < this.state.counter) {
 			this.getNextFiles();
 		}
-		
 	}
 
 	prevFileButton() {
@@ -136,12 +135,12 @@ class CJCore extends React.Component {
 		const xhr = new XMLHttpRequest();
 		xhr.open('get', "/leader", true);
 		xhr.onload = () => {
-			const script = JSON.parse(xhr.responseText);
+			const script = xhr.responseText; //had to changed from previous get judgeID method to work, not sure why???
 			this.setState({ topPick: script });
 		};
 		xhr.send();
-		var top = this.state.topPick;
-		return top;
+		var script = this.state.topPick;
+		return script;
 	}
 
 	send(pair, winner, timeJ, elapsed) {
@@ -230,7 +229,7 @@ function TotalScripts(props) {
 		<div id="totalScripts">
 			<p>Total pairings: {props.data}</p>
 			<p>Scripts Judged: {props.score}</p>
-			<p>Leading Script: {props.top}:</p>
+			<p>Leading Script: {props.top}</p>
 		</div>
 	);
 }

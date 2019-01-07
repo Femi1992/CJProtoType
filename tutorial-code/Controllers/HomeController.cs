@@ -145,7 +145,6 @@ namespace ReactDemo.Controllers
 			Dictionary<string, int> counts = new Dictionary<string, int>();
 			int compare = 0;
 	        string mostFrequent = "";
-
 			for (var i = 0; i < scriptsChosen.Count; i++)
 			{
 				// this needs changing, otherwise one gets added to each key during each iterations
